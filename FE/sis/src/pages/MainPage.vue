@@ -30,7 +30,6 @@
   </li>
 </ul>
     </div>
-    <div class="container">
     <div class="calander">
       <div class="c-paper">c-paper</div>
       <div class="c-list">c-list</div>
@@ -56,7 +55,6 @@
   </div>
 </div></div>
     <div class="introduction">introduction</div>
-  </div>
     <div class="footer">footer</div>
   </div>
 
@@ -66,11 +64,11 @@
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
 
-
 .wrapper {
   font-family: "Roboto Condensed", sans-serif;
   font-weight: 400;
   font-style: normal;
+  margin: 2px;
 }
 
 .header {
@@ -127,12 +125,6 @@
 .nav-bar {
   background-color: orange;
   color: white;
-}
-
-.container {
-  max-width: 100%;
-  padding: 0;
-  box-sizing: border-box;
 }
 
 .calander {
