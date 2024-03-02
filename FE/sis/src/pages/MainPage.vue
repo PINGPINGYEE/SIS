@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper">
     <!-- header -->
+
     <div class="header">
       <img src="../assets/header-logo.png" alt="Soul In Seoul">
       <div class="header-inform">
@@ -36,10 +37,19 @@
               </ul>
             </li>
           </ul>
-          <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit" style="color: white">Search</button>
-          </form>
+
+          <b-form-input v-model="text" placeholder="Search" @mouseover="showSearchInput" @mouseleave="hideSearchInput" :style="{
+    width: searchIsHovered ? '250px' : '0px',
+    opacity: searchIsHovered ? 1 : 0,
+    overflow: 'hidden',
+    transition: 'width 0.5s ease, opacity 0.5s ease'
+    
+  }"></b-form-input>
+
+          <i class="bi bi-search search-icon" @mouseover="showSearchInput" @mouseleave="hideSearchInput"></i>
+
+
+
         </div>
       </div>
     </nav>
@@ -77,14 +87,10 @@
       <div class="youtube">
 
 
-  <iframe
-    width="100%"
-    height="100%"
-    :src="`https://www.youtube.com/embed/${videoId}`"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen>
-  </iframe>
+        <iframe width="100%" height="100%" :src="`https://www.youtube.com/embed/${videoId}`" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
 
 
 
@@ -94,9 +100,9 @@
     <div class="recommend">
 
     </div>
+    <div class="introduction">introduction</div>
+    <div class="footer">footer</div>
   </div>
-  <div class="introduction">introduction</div>
-  <div class="footer">footer</div>
 
 </template>
 
@@ -107,6 +113,7 @@
       return {
         slide: 0,
         currentIndex: 0,
+        searchIsHovered: false,
         videoId: 'MoCo084oAEE',
         menus: [{
             id: 1,
@@ -162,7 +169,13 @@
       },
       prevImage() {
         this.currentIndex = (this.currentIndex + this.images.length - 1) % this.images.length;
-      }
+      },
+      showSearchInput() {
+        this.searchIsHovered = true;
+      },
+      hideSearchInput() {
+        this.searchIsHovered = false;
+      },
     },
 
 
@@ -174,6 +187,7 @@
   @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
   @import 'bootstrap/dist/css/bootstrap.css';
   @import 'bootstrap-vue/dist/bootstrap-vue.css';
+  @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css");
 
 
   .wrapper {
@@ -241,9 +255,14 @@
   }
 
 
+
   .dropdown-active .nav-link {
     color: white;
-    /* 활성화된 드롭다운의 텍스트 색상 변경 */
+    transition: transform 0.5s ease;
+  }
+
+  .dropdown-active .nav-link:hover {
+    transform: scale(1.1);
   }
 
   .navbar .dropdown-toggle::after {
@@ -275,7 +294,23 @@
     transform-origin: top;
   }
 
+  ::v-deep .form-control {
+    width: 20%;
+    margin: 0 -22px 0 0;
+  }
 
+
+  .search-icon {
+    color: gray;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.5s ease;
+    transform: scale(1.1);
+  }
+
+  .search-icon:hover {
+    color: black;
+    transform: scale(1.3);
+  }
 
 
   .calander {
@@ -284,16 +319,24 @@
     height: 285.5px;
   }
 
-
-
   .calander .c-paper {
     color: white;
     width: 50%;
+    border: none;
   }
 
   ::v-deep .vc-container {
     width: 100% !important;
     height: 100% !important;
+    border: none;
+  }
+
+  ::v-deep .vc-arrow {
+    background-color: white;
+  }
+
+  ::v-deep .vc-title {
+    background-color: white;
   }
 
   .calander .c-list {
@@ -304,6 +347,7 @@
     /* Flexbox 레이아웃 사용 */
     flex-direction: column;
     /* 자식 요소들을 세로로 정렬 */
+
   }
 
   .calander .c-list .b-list-group {
@@ -379,24 +423,27 @@
 
 
   .youtube {
-  position: relative; /* z-index 적용을 위해 position 설정 */
-  background-color: blue;
-  color: white;
-  z-index: 1; /* 기본 상태에서의 z-index */
-}
+    position: relative;
+    /* z-index 적용을 위해 position 설정 */
+    background-color: blue;
+    color: white;
+    z-index: 1;
+    /* 기본 상태에서의 z-index */
+  }
 
-.youtube:hover {
-  z-index: 9999; /* 호버 시 매우 높은 z-index 적용 */
-}
+  .youtube:hover {
+    z-index: 9999;
+    /* 호버 시 매우 높은 z-index 적용 */
+  }
 
-.youtube iframe {
-  transition: transform 0.5s ease;
-  transform-origin: right bottom;
-}
+  .youtube iframe {
+    transition: transform 0.5s ease;
+    transform-origin: right bottom;
+  }
 
-.youtube:hover iframe {
-  transform: scale(1.3);
-}
+  .youtube:hover iframe {
+    transform: scale(1.3);
+  }
 
 
   .recommend {

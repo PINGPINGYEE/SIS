@@ -5,6 +5,7 @@ import BootstrapVue3 from 'bootstrap-vue-3';
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'; // 필요한 경우
 import VCalendar from 'v-calendar';
 import 'v-calendar/style.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const app = createApp(App);
 
