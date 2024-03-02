@@ -38,7 +38,8 @@
             </li>
           </ul>
 
-          <b-form-input v-model="text" placeholder="Search" @mouseover="showSearchInput" @mouseleave="hideSearchInput" :style="{
+          <b-form-input v-model="text" placeholder="Search" @mouseover="showSearchInput" @mouseleave="hideSearchInput"
+            :style="{
     width: searchIsHovered ? '250px' : '0px',
     opacity: searchIsHovered ? 1 : 0,
     overflow: 'hidden',
@@ -54,7 +55,7 @@
       </div>
     </nav>
 
-
+    <!-- calander -->
     <div class="calander">
       <!-- cal-paper -->
       <div class="c-paper">
@@ -62,21 +63,27 @@
       </div>
       <!-- cal-list -->
       <div class="c-list">
-        <b-list-group>
-          <b-list-group-item href="#">festival 1</b-list-group-item>
-          <b-list-group-item href="#" variant="primary">festival 2</b-list-group-item>
-          <b-list-group-item href="#" variant="secondary">festival 3</b-list-group-item>
-          <b-list-group-item href="#" variant="success">festival 4</b-list-group-item>
-          <b-list-group-item href="#" variant="danger">festival 5</b-list-group-item>
-          <b-list-group-item href="#" variant="warning">festival 6</b-list-group-item>
-          <b-list-group-item href="#" variant="dark">festival 7</b-list-group-item>
-        </b-list-group>
+        <b-table :items="items" :fields="fields">
+          <template v-slot:cell(dots)="data">
+            <span v-if="data.item.Type === 'red'" class="dot" style="background-color: red;" v-b-tooltip.hover
+              title="Healing"></span>
+            <span v-if="data.item.Type === 'blue'" class="dot" style="background-color: blue;" v-b-tooltip.hover
+              title="Dynamic"></span>
+            <span v-if="data.item.Type === 'yellow'" class="dot" style="background-color: yellow;" v-b-tooltip.hover
+              title="University"></span>
+          </template>
+          {{ data.item.Date }}
+        </b-table>
+        
+
       </div>
     </div>
+    
+
 
     <div class="summary-contents">
       <!-- magazine -->
-      <div class="magazine">
+      <div class="magazine" :class="{ 'hovered': lastHovered === 'magazine' }">
         <div class="image-slider">
           <img :src="images[currentIndex]" alt="Magazine Image" class="slider-image">
           <button class="nav-button left" @click="prevImage">&#60;</button>
@@ -84,7 +91,7 @@
         </div>
 
       </div>
-      <div class="youtube">
+      <div class="youtube" :class="{ 'hovered': lastHovered === 'youtube' }">
 
 
         <iframe width="100%" height="100%" :src="`https://www.youtube.com/embed/${videoId}`" frameborder="0"
@@ -108,12 +115,15 @@
 
 
 <script>
+
   export default {
+    
     data() {
       return {
         slide: 0,
         currentIndex: 0,
         searchIsHovered: false,
+        lastHovered: null,
         videoId: 'MoCo084oAEE',
         menus: [{
             id: 1,
@@ -131,11 +141,49 @@
             items: ['Action', 'Another action']
           },
         ],
+        fields: [{
+            key: 'dots',
+            label: '',
+            class: 'dot-column'
+          },
+          'Date', 'Name', 'Area'
+        ],
+
+        items: [{
+            Date: '24.03.03',
+            Name: 'Party~~!',
+            Area: 'Seoul Art Center',
+            Type: 'red'
+          },
+          {
+            Date: '24.03.03',
+            Name: 'Concert~~!',
+            Area: 'Seoul Theater',
+            Type: 'blue'
+          },
+          {
+            Date: '24.03.03',
+            Name: 'Festival~~!',
+            Area: 'Seoul Square',
+            Type: 'yellow'
+          },
+
+          {
+            Date: '-',
+            Name: '-',
+            Area: '-'
+          },
+          {
+            Date: '-',
+            Name: '-',
+            Area: '-'
+          }
+        ],
         images: [
           'https://picsum.photos/1024/480/?image=10',
           'https://picsum.photos/1024/480/?image=30',
           'https://picsum.photos/1024/480/?image=40',
-        ]
+        ],
 
       };
     },
@@ -164,6 +212,14 @@
           return menu;
         });
       },
+      currentDate() {
+        const current = new Date();
+        const year = current.getFullYear().toString().slice(-2);
+        const month = (current.getMonth() + 1).toString().padStart(2, '0');
+        const day = current.getDate().toString().padStart(2, '0');
+
+        return `${year}.${month}.${day}`;
+      },
       nextImage() {
         this.currentIndex = (this.currentIndex + 1) % this.images.length;
       },
@@ -176,6 +232,9 @@
       hideSearchInput() {
         this.searchIsHovered = false;
       },
+      zoomIn(element) {
+        this.lastHovered = element;
+      },
     },
 
 
@@ -185,10 +244,14 @@
 
 <style scoped>
   @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
-  @import 'bootstrap/dist/css/bootstrap.css';
-  @import 'bootstrap-vue/dist/bootstrap-vue.css';
+  @import url('bootstrap/dist/css/bootstrap.css');
+  @import url('bootstrap-vue/dist/bootstrap-vue.css');
   @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css");
 
+  .hovered {
+    z-index: 1001;
+    /* 호버된 요소가 가장 높은 z-index를 가짐 */
+  }
 
   .wrapper {
     font-family: "Roboto Condensed", sans-serif;
@@ -209,6 +272,7 @@
     left: 72%;
   }
 
+  
   .header-inform .sns {
     font-family: "Dancing Script", cursive;
     font-size: 15px;
@@ -300,6 +364,7 @@
   }
 
 
+
   .search-icon {
     color: gray;
     cursor: pointer;
@@ -350,11 +415,28 @@
 
   }
 
-  .calander .c-list .b-list-group {
-    flex-grow: 1;
-    /* 가능한 모든 공간을 채우도록 설정 */
+
+  ::v-deep .table.b-table>caption {
+    text-align: right;
   }
 
+
+  .dot {
+    height: 7px;
+    width: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 auto;
+  }
+
+  ::v-deep .dot-column {
+    max-width: 15px;
+    /* 또는 원하는 너비에 맞게 조절 */
+    width: 15px;
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+  }
 
 
 
@@ -368,6 +450,13 @@
     height: 350px;
   }
 
+  .magazine {
+    position: relative;
+    transition: transform 0.5s ease;
+    transform-origin: left bottom;
+  }
+
+
   .magazine .image-slider {
     position: relative;
     width: 100%;
@@ -375,30 +464,23 @@
     /* Adjust based on your requirement */
     overflow: hidden;
     position: relative;
-    /* z-index를 위해 position 설정 */
-    z-index: 1000;
     transition: transform 0.5s ease;
     transform-origin: left bottom;
   }
 
   .image-slider:hover {
-    transform: scale(1.3);
-    /* div 크기를 10% 확대 */
+    transform: scale(1.5);
+
   }
 
-  .magazine .slider-image {
+  .slider-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
-    transform-origin: left bottom;
-    /* 변환의 기준점을 왼쪽 하단으로 설정 */
+    /* 확대 효과 제거 */
   }
 
-  .magazine .slider-image:hover {
-    transform: scale(1.1);
-    /* 이미지를 10% 확대 */
-  }
+
 
 
 
@@ -427,13 +509,7 @@
     /* z-index 적용을 위해 position 설정 */
     background-color: blue;
     color: white;
-    z-index: 1;
-    /* 기본 상태에서의 z-index */
-  }
 
-  .youtube:hover {
-    z-index: 9999;
-    /* 호버 시 매우 높은 z-index 적용 */
   }
 
   .youtube iframe {
@@ -442,7 +518,18 @@
   }
 
   .youtube:hover iframe {
-    transform: scale(1.3);
+    transform: scale(1.5);
+  }
+
+  .magazine,
+  .youtube {
+    z-index: 500;
+    transition: z-index 0.5s ease;
+  }
+
+  .magazine:hover,
+  .youtube:hover {
+    z-index: 1000;
   }
 
 
@@ -465,4 +552,6 @@
     background-color: gray;
     color: white;
   }
+
+  
 </style>
