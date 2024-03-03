@@ -38,14 +38,13 @@
             </li>
           </ul>
 
-          <b-form-input v-model="text" placeholder="Search" @mouseover="showSearchInput" @mouseleave="hideSearchInput"
-            :style="{
-    width: searchIsHovered ? '250px' : '0px',
-    opacity: searchIsHovered ? 1 : 0,
-    overflow: 'hidden',
-    transition: 'width 0.5s ease, opacity 0.5s ease'
-    
-  }"></b-form-input>
+          <input type="text" class="form-control" v-model="text" placeholder="Search" @mouseover="showSearchInput"
+            @mouseleave="hideSearchInput" :style="{
+      width: searchIsHovered ? '250px' : '0px',
+      opacity: searchIsHovered ? 1 : 0,
+      overflow: 'hidden',
+      transition: 'width 0.5s ease, opacity 0.5s ease'
+    }">
 
           <i class="bi bi-search search-icon" @mouseover="showSearchInput" @mouseleave="hideSearchInput"></i>
 
@@ -63,22 +62,34 @@
       </div>
       <!-- cal-list -->
       <div class="c-list">
-        <b-table :items="items" :fields="fields">
-          <template v-slot:cell(dots)="data">
-            <span v-if="data.item.Type === 'red'" class="dot" style="background-color: red;" v-b-tooltip.hover
-              title="Healing"></span>
-            <span v-if="data.item.Type === 'blue'" class="dot" style="background-color: blue;" v-b-tooltip.hover
-              title="Dynamic"></span>
-            <span v-if="data.item.Type === 'yellow'" class="dot" style="background-color: yellow;" v-b-tooltip.hover
-              title="University"></span>
-          </template>
-          {{ data.item.Date }}
-        </b-table>
-        
+        <table class="table">
+          <caption>As Of {{ currentDate() }}</caption>
+          <thead>
+            <tr>
+              <th v-for="field in fields" :key="field.key" :class="field.class">
+                {{ field.label }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in items" :key="item.Date">
+              <span class="dot-container">
+                <td v-if="item.Type === 'red'" class="dot" style="background-color: red;" v-tooltip title="Healing"></td>
+                <td v-else-if="item.Type === 'blue'" class="dot" style="background-color: blue;" v-tooltip title="Dynamic"></td>
+                <td v-else-if="item.Type === 'yellow'" class="dot" style="background-color: yellow;" v-tooltip title="University">
+                </td>
+                <td v-else class="dot" style="background-color: gray;" v-tooltip title="none"></td>
+              </span>
+              <td>{{ item.Date }}</td>
+              <td>{{ item.Name }}</td>
+              <td>{{ item.Area }}</td>
+            </tr>
+          </tbody>
+        </table>
+
 
       </div>
     </div>
-    
 
 
     <div class="summary-contents">
@@ -115,9 +126,8 @@
 
 
 <script>
-
   export default {
-    
+
     data() {
       return {
         slide: 0,
@@ -146,9 +156,19 @@
             label: '',
             class: 'dot-column'
           },
-          'Date', 'Name', 'Area'
+          {
+            key: 'Date',
+            label: 'Date'
+          },
+          {
+            key: 'Name',
+            label: 'Name'
+          },
+          {
+            key: 'Area',
+            label: 'Area'
+          }
         ],
-
         items: [{
             Date: '24.03.03',
             Name: 'Party~~!',
@@ -167,16 +187,17 @@
             Area: 'Seoul Square',
             Type: 'yellow'
           },
-
           {
-            Date: '-',
-            Name: '-',
-            Area: '-'
+            Date: '24.03.05',
+            Name: 'Festival~~!',
+            Area: 'Online',
+            Type: 'red'
           },
           {
             Date: '-',
             Name: '-',
-            Area: '-'
+            Area: '-',
+            Type: null
           }
         ],
         images: [
@@ -245,7 +266,6 @@
 <style scoped>
   @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
   @import url('bootstrap/dist/css/bootstrap.css');
-  @import url('bootstrap-vue/dist/bootstrap-vue.css');
   @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css");
 
   .hovered {
@@ -272,7 +292,7 @@
     left: 72%;
   }
 
-  
+
   .header-inform .sns {
     font-family: "Dancing Script", cursive;
     font-size: 15px;
@@ -415,27 +435,33 @@
 
   }
 
-
-  ::v-deep .table.b-table>caption {
+  caption {
+    margin: 0 4px;
     text-align: right;
   }
 
-
-  .dot {
-    height: 7px;
-    width: 7px;
-    border-radius: 50%;
+  .dot-container {
     display: inline-block;
-    margin: 0 auto;
+    vertical-align: middle;
+
+    /* 필요한 경우 추가적인 스타일링 */
   }
 
-  ::v-deep .dot-column {
-    max-width: 15px;
-    /* 또는 원하는 너비에 맞게 조절 */
-    width: 15px;
-    padding: 0;
+  .dot {
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    margin-left: 50%;
+    /* 점을 셀의 오른쪽으로 밀어붙임 */
+    margin-right: auto;
+    /* 오른쪽 여백을 추가하여 점을 적당히 오른쪽으로 이동 */
+    display: inline-block;
+  }
+
+  .dot-column {
+    width: 20px;
     text-align: center;
-    vertical-align: middle;
+    border-bottom: none !important;
   }
 
 
@@ -552,6 +578,4 @@
     background-color: gray;
     color: white;
   }
-
-  
 </style>
