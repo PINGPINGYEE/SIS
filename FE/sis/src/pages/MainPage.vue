@@ -95,7 +95,7 @@
     <div class="summary-contents">
   <!-- magazine -->
   <div ref="magazine" :class="['magazine', { 'visible': isYoutubeAtInitialSize, 'hidden': !isYoutubeAtInitialSize  }]" @mouseover="checkMagazineSize" @mouseleave="resetSizeCheck">
-        <div class="label" style="color:green; font-size: 30px;">Magazine</div>
+        <div class="label">Magazine</div>
     <div class="image-slider">
           <img :src="images[currentIndex]" alt="Magazine Image" class="slider-image">
           <button class="nav-button left" @click="prevImage">&#60;</button>
@@ -105,7 +105,7 @@
       </div>
         <!-- youtube -->
         <div ref="youtube" :class="['youtube', { 'visible': isMagazineAtInitialSize, 'hidden': !isMagazineAtInitialSize }]" @mouseover="checkYoutubeSize" @mouseleave="resetSizeCheck">
-    <div class="label" style="color:green; font-size: 30px; text-align: right;">YouTube</div>
+    <div class="label">YouTube</div>
         <iframe width="100%" height="100%" :src="`https://www.youtube.com/embed/${videoId}`" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen>
@@ -485,6 +485,22 @@
     background-color: white;
   }
 
+  ::v-deep .vc-nav-title.vc-focus {
+    background-color: white;
+  }
+
+  ::v-deep .vc-nav-item.vc-focus {
+    background-color: white;
+  }
+
+  ::v-deep .vc-nav-item.vc-focus.is-active {
+    background-color: yellowgreen;
+  }
+
+  ::v-deep .vc-base-icon {
+    background-color: white;
+  }
+
   .calander .c-list {
     width: 50%;
     height: 100%;
@@ -634,6 +650,36 @@
   .youtube:hover {
     z-index: 1000;
   }
+
+  .magazine:hover .label,
+.youtube:hover .label {
+  transition: transform 0.5s ease;
+}
+
+.magazine:hover .label {
+  transform: translateX(-98%); /* Move the label to the left */
+  margin-right: 10px; /* Add some space between the label and the border */
+}
+
+.youtube:hover .label {
+  transform: translateX(17%); /* Move the label to the right */
+  margin-left: 10px; /* Add some space between the label and the border */
+}
+
+.label {
+  display: inline-block;
+  color: green;
+  font-size: 30px;
+  padding: 5px; /* Some padding around the text */
+  border-radius: 5px; /* Rounded corners for the label */
+  transition: transform 0.5s ease; /* Smooth transition for moving label */
+}
+
+.youtube .label {
+  text-align: right;
+  width: 100%;
+}
+
 
   .recommend {
     margin: 40px 4px;
