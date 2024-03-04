@@ -94,8 +94,8 @@
 
     <div class="summary-contents">
   <!-- magazine -->
-  <div class="magazine" :class="{ 'hovered': lastHovered === 'magazine' }">
-    <span class="label" style="color:green; font-size: 30px; ">Magazine</span>
+  <div ref="magazine" :class="['magazine', { 'visible': isYoutubeAtInitialSize, 'hidden': !isYoutubeAtInitialSize  }]" @mouseover="checkMagazineSize" @mouseleave="resetSizeCheck">
+        <div class="label" style="color:green; font-size: 30px;">Magazine</div>
     <div class="image-slider">
           <img :src="images[currentIndex]" alt="Magazine Image" class="slider-image">
           <button class="nav-button left" @click="prevImage">&#60;</button>
@@ -104,8 +104,8 @@
 
       </div>
         <!-- youtube -->
-  <div class="youtube" :class="{ 'hovered': lastHovered === 'youtube' }">
-    <span class="label" style="color:green; font-size: 30px;">YouTube</span>
+        <div ref="youtube" :class="['youtube', { 'visible': isMagazineAtInitialSize, 'hidden': !isMagazineAtInitialSize }]" @mouseover="checkYoutubeSize" @mouseleave="resetSizeCheck">
+    <div class="label" style="color:green; font-size: 30px; text-align: right;">YouTube</div>
         <iframe width="100%" height="100%" :src="`https://www.youtube.com/embed/${videoId}`" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen>
@@ -154,9 +154,11 @@
         currentIndex: 0,
         searchIsHovered: false,
         lastHovered: null,
-        isHovered: false,
-      hoveredSection: null,
         videoId: 'MoCo084oAEE',
+        isMagazineAtInitialSize: true,
+      isYoutubeAtInitialSize: true,
+        magazineSize: { width: 50, height: 350 }, // Initial dimensions for magazine
+      youtubeSize: { width: 50, height: 350 },
         menus: [{
             id: 1,
             name: 'Program',
@@ -230,6 +232,16 @@
 
       };
     },
+    computed: {
+    isMagazineVisible() {
+      // Determines the visibility of the magazine based on its dimensions
+      return this.magazineSize.width === 50 && this.magazineSize.height === 350;
+    },
+    isYoutubeVisible() {
+      // Determines the visibility of the youtube based on its dimensions
+      return this.youtubeSize.width === 50 && this.youtubeSize.height === 350;
+    },
+  },
     methods: {
       openDropdown(id) {
         this.menus = this.menus.map(menu => {
@@ -263,7 +275,22 @@
 
         return `${year}.${month}.${day}`;
       },
-      
+      checkMagazineSize() {
+    if (this.$refs.magazine) {
+      const magazine = this.$refs.magazine;
+      this.isMagazineAtInitialSize = magazine.offsetWidth === this.magazineSize.width && magazine.offsetHeight === this.magazineSize.height;
+    }
+  },
+  checkYoutubeSize() {
+    if (this.$refs.youtube) {
+      const youtube = this.$refs.youtube;
+      this.isYoutubeAtInitialSize = youtube.offsetWidth === this.youtubeSize.width && youtube.offsetHeight === this.youtubeSize.height;
+    }
+  },
+  resetSizeCheck() {
+    this.isMagazineAtInitialSize = true;
+    this.isYoutubeAtInitialSize = true;
+  },
       nextImage() {
         this.currentIndex = (this.currentIndex + 1) % this.images.length;
       },
@@ -294,6 +321,16 @@
   .hovered {
     z-index: 1001;
     /* 호버된 요소가 가장 높은 z-index를 가짐 */
+  }
+
+  .visible {
+    visibility: visible;
+    transition: visibility 0.3s linear;
+  }
+
+  .hidden {
+    visibility: hidden;
+    transition: visibility 0.3s linear;
   }
 
   .wrapper {
