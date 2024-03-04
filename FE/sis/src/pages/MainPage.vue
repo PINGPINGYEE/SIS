@@ -93,9 +93,17 @@
 
 
     <div class="summary-contents">
+      <div class="youtube-overlay" v-if="!isMagazineAtInitialSize">
+        <h3>Soul In Seoul magazine</h3>
+        <h5>This is our magazine. Introduce blabla</h5>
+      </div>
   <!-- magazine -->
   <div ref="magazine" :class="['magazine', { 'visible': isYoutubeAtInitialSize, 'hidden': !isYoutubeAtInitialSize  }]" @mouseover="checkMagazineSize" @mouseleave="resetSizeCheck">
-        <div class="label">Magazine</div>
+        <div class="label">Magazine <br>
+          <a v-if="!isMagazineAtInitialSize" href="https://www.naver.com">
+  <button type="button" class="btn btn-outline-success">More</button>
+</a>
+        </div>
     <div class="image-slider">
           <img :src="images[currentIndex]" alt="Magazine Image" class="slider-image">
           <button class="nav-button left" @click="prevImage">&#60;</button>
@@ -103,9 +111,18 @@
         </div>
 
       </div>
+
+      <div class="magazine-overlay" v-if="!isYoutubeAtInitialSize">
+        <h3>Soul In Seoul Youtube Channel</h3>
+        <h5>This is our youtube. Introduce blabla</h5>
+      </div>
         <!-- youtube -->
         <div ref="youtube" :class="['youtube', { 'visible': isMagazineAtInitialSize, 'hidden': !isMagazineAtInitialSize }]" @mouseover="checkYoutubeSize" @mouseleave="resetSizeCheck">
-    <div class="label">YouTube</div>
+    <div class="label">YouTube<br>
+      <a v-if="!isYoutubeAtInitialSize" href="https://www.youtube.com" target="_blank">
+  <button type="button" class="btn btn-outline-success">More</button>
+</a>
+</div>
         <iframe width="100%" height="100%" :src="`https://www.youtube.com/embed/${videoId}`" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen>
@@ -398,8 +415,6 @@
     color: white;
   }
 
-
-
   .dropdown-active .nav-link {
     color: white;
     transition: transform 0.5s ease;
@@ -574,6 +589,7 @@
     position: relative;
     transform-origin: left bottom;
     margin: -20px 35px 0 120px;
+    transition: opacity 0.5s ease-out;
   }
 
 
@@ -629,6 +645,7 @@
 
     color: green;
     margin: -20px 120px 0 35px;
+    transition: opacity 0.5s ease-out;
   }
 
   .youtube iframe {
@@ -678,6 +695,94 @@
 .youtube .label {
   text-align: right;
   width: 100%;
+}
+
+@keyframes magazine-overlay-frame {
+  0% {
+    transform: translateX(0px),;
+  }
+
+  50% {
+    transform: translateX(6%) ;
+  }
+
+
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+@keyframes youtube-overlay-frame {
+  0% {
+    transform: translateX(0px),;
+  }
+
+  50% {
+    transform: translateX(-6%) ;
+  }
+
+
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+
+
+.magazine-overlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 2%;
+  top: -38px;
+  width: 28%;
+  height: 94%;
+  background-color: rgba(128, 128, 128, 0.7);
+  color: white;
+  font-size: 24px;
+  z-index: 2;
+  transition: opacity 0.5s ease;
+  padding: 15px;
+  animation-name: youtube-overlay-frame;
+  animation-duration: 0.8s;
+}
+
+.magazine:hover ~ .magazine-overlay {
+  opacity: 1;
+}
+
+.magazine:hover + .youtube {
+  opacity: 0;
+}
+
+.youtube-overlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 2%;
+  top: -38px;
+  width: 28%;
+  height: 94%;
+  background-color: rgba(128, 128, 128, 0.7);
+  color: white;
+  font-size: 24px;
+  z-index: 2;
+  transition: opacity 0.5s ease;
+  padding: 15px;
+  animation-name: magazine-overlay-frame;
+  animation-duration: 0.8s;
+}
+
+.youtube:hover ~ .youtube-overlay {
+  opacity: 1;
+}
+
+.youtube:hover ~ .magazine {
+  opacity: 0;
 }
 
 
