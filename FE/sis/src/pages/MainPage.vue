@@ -1,6 +1,8 @@
 <template>
   <div class="wrapper">
     <!-- header -->
+    <button class="back-to-top" @click="scrollToTop"><i class="bi bi-arrow-up-square"></i></button>
+
 
     <div class="header">
       <img src="../assets/header-logo.png" alt="Soul In Seoul">
@@ -260,6 +262,9 @@
     },
   },
     methods: {
+      scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  },
       openDropdown(id) {
         this.menus = this.menus.map(menu => {
           if (menu.id === id) {
@@ -349,6 +354,30 @@
     visibility: hidden;
     transition: visibility 0.3s linear;
   }
+
+  .back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 200px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  display: none; /* Hidden by default */
+  z-index: 999; /* Ensure it's above other content */
+  opacity: 0.5;
+  display: block;
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.back-to-top:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
 
   .wrapper {
     font-family: "Roboto Condensed", sans-serif;
