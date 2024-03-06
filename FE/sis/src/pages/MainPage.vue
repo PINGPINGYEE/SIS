@@ -817,7 +817,7 @@
 
   .recommend {
     margin: 40px 4px;
-    height: 350px;
+    height: 500px;
   }
 
   .recommend ::v-deep .nav.nav-tabs {
@@ -825,6 +825,7 @@
   }
 
   .recommend ::v-deep .nav-link {
+    height: 50px;
     color:rgb(63, 214, 63);
   }
 
