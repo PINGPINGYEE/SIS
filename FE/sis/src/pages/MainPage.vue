@@ -359,8 +359,8 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: green;
-  color: white;
+  background-color: none;
+  color: black;
   border: none;
   border-radius: 200px;
   padding: 10px 20px;
